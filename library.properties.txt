@@ -1,0 +1,9 @@
+name=I0Servo
+version=1.0.0
+author=i0Nemesis
+maintainer=Melisa Ramcilovic <m88ramcilovic@gmail.com>
+sentence=Servo control.
+category=Device Control
+url=https://github.com/Meli0609/I0Servo
+architectures=*
+includes=ESP32ServoX.h
