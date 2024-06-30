@@ -105,6 +105,10 @@
 
 #define PWM_FREQUENCY 200
 
+#ifndef SERVO_MAX_ANGLE
+#define SERVO_MAX_ANGLE 120
+#endif
+
 /*
  * This group/channel/timmer mapping is for information only;
  * the details are handled by lower-level code

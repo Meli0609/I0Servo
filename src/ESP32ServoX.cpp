@@ -143,19 +143,22 @@ void ServoX::write(int value) {
   if (value < MIN_PULSE_WIDTH) {
     if (value < 0)
       value = 0;
-    else if (value > 180)
-      value = 180;
+    else if (value > SERVO_MAX_ANGLE)
+      value = SERVO_MAX_ANGLE;
 
-    value = map(value, 0, 180, this->min, this->max);
+    value = map(value, 0, SERVO_MAX_ANGLE, this->min, this->max);
   }
   this->writeMicroseconds(value);
 }
 
 void ServoX::writeMicroseconds(int value) {
+  Serial.printf("uSeconds: %d\r\n ", value);
   writeTicks(usToTicks(value));  // convert to ticks
 }
 
 void ServoX::writeTicks(int value) {
+  Serial.printf("ticks: %d max ticks: %d\r\n ", value, usToTicks(this->max));
+
   // calculate and store the values for the given channel
   if (this->attached())  // ensure channel is valid
   {
@@ -178,7 +181,7 @@ void ServoX::release() {
 
 int ServoX::read()  // return the value as degrees
 {
-  return (map(readMicroseconds(), this->min, this->max, 0, 180));
+  return (map(readMicroseconds(), this->min, this->max, 0, 120));
 }
 
 int ServoX::readMicroseconds() {
