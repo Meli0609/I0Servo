@@ -65,7 +65,7 @@ void I0Servo::setToAngle(float angle, uint16_t servoSpeed) {
 
 String I0Servo::getStatus() {
   char status[200];
-  sprintf(status, "A %.2f US %d MINA %.2f MAXA %.2f", readAngle(), readMicroseconds(), _minAngle, _maxAngle);
+  sprintf(status, "A %.2f US %d MINA %.2f MAXA %.2f MINUS %.2f MAXUS %.2f", readAngle(), readMicroseconds(), _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds);
   return status;
 }
 
@@ -128,7 +128,7 @@ int I0Servo::attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAn
     maxMicroSeconds = DEFAULT_SERVO_MAX_MICRO_SECONDS;
   if (minAngle < DEFAULT_SERVO_MIN_ANGLE)
     minAngle = DEFAULT_SERVO_MIN_ANGLE;
-  if (maxAngle < DEFAULT_SERVO_MAX_ANGLE)
+  if (maxAngle > DEFAULT_SERVO_MAX_ANGLE)
     maxAngle = DEFAULT_SERVO_MAX_ANGLE;
 
   _minMicroSeconds = minMicroSeconds;  //store this value in uS

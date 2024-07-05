@@ -23,7 +23,7 @@
 #define DEFAULT_SERVO_MIN_MICRO_SECONDS 500
 #define DEFAULT_SERVO_MAX_MICRO_SECONDS 2500
 #define DEFAULT_SERVO_MIN_ANGLE 0
-#define DEFAULT_SERVO_MAX_ANGLE 180
+#define DEFAULT_SERVO_MAX_ANGLE 270
 
 /*
  * This group/channel/timmer mapping is for information only;
@@ -61,8 +61,8 @@ public:
   String getStatus();
   void setToMicroSeconds(int targetMicroseconds);
   void setToAngle(float angle, uint16_t servoSpeed);
-  int attach(int pin);                    // attach the given pin to the next free channel, returns channel number or 0 if failure
-  int attach(int pin, int min, int max);  // as above but also sets min and max values for writes.
+  int attach(int pin);                                                                        // attach the given pin to the next free channel, returns channel number or 0 if failure
+  int attach(int pin, int min, int max);                                                      // as above but also sets min and max values for writes.
   int attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAngle, int maxAngle);  // as above but also sets min and max values for writes.
   void detach();
   void write(int value);              // if value is < MIN_PULSE_WIDTH its treated as an angle, otherwise as pulse width in microseconds
@@ -92,7 +92,7 @@ private:
   int _timer_width = DEFAULT_TIMER_WIDTH;              // ESP32 allows variable width PWM timers
   int _ticks = DEFAULT_PULSE_WIDTH_TICKS;              // current pulse width on this channel
   int _timer_width_ticks = DEFAULT_TIMER_WIDTH_TICKS;  // no. of ticks at rollover; varies with width
-  ESP32PWMX* getPwm();                                // get the PWM object
+  ESP32PWMX* getPwm();                                 // get the PWM object
   ESP32PWMX pwm;
   int REFRESH_CPS = PWM_FREQUENCY;
 };
