@@ -2,6 +2,7 @@
 #include <math.h>
 
 #define SERVO_SPEED 150
+#define SERVOS_COUNT 3
 
 #ifndef I0ServoArray_h
 #define I0ServoArray_h
@@ -12,7 +13,6 @@ struct ServoSync {
   float microSeconds;
 };
 
-template <int SERVOS_COUNT>
 class I0ServoArray {
 public:
   I0Servo servos[SERVOS_COUNT];
