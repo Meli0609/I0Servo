@@ -66,19 +66,18 @@ public:
   String getStatus();
   void setToMicroSeconds(int targetMicroseconds);
   void setToAngle(float angle, uint16_t servoSpeed);
-  int attach(int pin);                                                                        // attach the given pin to the next free channel, returns channel number or 0 if failure
-  int attach(int pin, int min, int max);                                                      // as above but also sets min and max values for writes.
-  int attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAngle, int maxAngle);  // as above but also sets min and max values for writes.
+  int attach(int pin);                                                                                             // attach the given pin to the next free channel, returns channel number or 0 if failure
+  int attach(int pin, int min, int max);                                                                           // as above but also sets min and max values for writes.
+  int attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAngle, int maxAngle, Direction direction);  // as above but also sets min and max values for writes.
   void detach();
   void write(int value);              // if value is < MIN_PULSE_WIDTH its treated as an angle, otherwise as pulse width in microseconds
   void writeMicroseconds(int value);  // Write pulse width in microseconds
   void writeTicks(int value);         // Write ticks, the smallest increment the servo can handle
   void release();
-  float readAngle();                       // returns current pulse width as an angle between 0 and 180 degrees
-  int readMicroseconds();                  // returns current pulse width in microseconds for this servo
-  int readTicks();                         // returns current ticks, the smallest increment the servo can handle
-  bool attached();                         // return true if this servo is attached, otherwise false
-  void setDirection(Direction direction);  // set servo rotation direction
+  float readAngle();       // returns current pulse width as an angle between 0 and 180 degrees
+  int readMicroseconds();  // returns current pulse width in microseconds for this servo
+  int readTicks();         // returns current ticks, the smallest increment the servo can handle
+  bool attached();         // return true if this servo is attached, otherwise false
 
   // ESP32 only functions
   void setTimerWidth(int value);  // set the PWM timer width (ESP32 ONLY)

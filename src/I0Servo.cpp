@@ -114,7 +114,7 @@ int I0Servo::attach(int pin, int minMicroSeconds, int maxMicroSeconds) {
   return pwm.getChannel();
 }
 
-int I0Servo::attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAngle, int maxAngle) {
+int I0Servo::attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAngle, int maxAngle, Direction direction) {
   // ESP32 Recommend only the following pins 2,4,12-19,21-23,25-27,32-33
   // ESP32-S2 only the following pins 1-21,26,33-42
   if (pwm.hasPwm(pin)) {
@@ -142,6 +142,7 @@ int I0Servo::attach(int pin, int minMicroSeconds, int maxMicroSeconds, int minAn
   _maxMicroSeconds = maxMicroSeconds;
   _minAngle = minAngle;
   _maxAngle = maxAngle;
+  _direction = direction;
 
   // Set up this channel
   // if you want anything other than default timer width, you must call setTimerWidth() before attach
@@ -216,10 +217,6 @@ int I0Servo::readTicks() {
 
 bool I0Servo::attached() {
   return (pwm.attached());
-}
-
-void I0Servo::setDirection(Direction direction) {
-  _direction = direction;
 }
 
 void I0Servo::setTimerWidth(int value) {
