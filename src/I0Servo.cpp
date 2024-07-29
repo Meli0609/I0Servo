@@ -9,35 +9,42 @@ I0Servo::I0Servo() {
   this->_timer_width_ticks = pow(2, this->_timer_width);
 }
 
-I0Servo::I0Servo(float minAngle, float maxAngle, float minMicroSeconds, float maxMicroSeconds)
+I0Servo::I0Servo(float minAngle, float maxAngle, float minMicroSeconds, float maxMicroSeconds, Direction direction)
   : I0Servo() {
   _minAngle = minAngle;
   _maxAngle = maxAngle;
   _minMicroSeconds = minMicroSeconds;
   _maxMicroSeconds = maxMicroSeconds;
+  _direction = direction;
 }
 
 long I0Servo::angle2MicroSeconds(float x) {
-  return angle2MicroSeconds(x, _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds);
+  return angle2MicroSeconds(x, _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds, _direction);
 }
 
-long I0Servo::angle2MicroSeconds(float x, float inMin, float inMax, float outMin, float outMax) {
+long I0Servo::angle2MicroSeconds(float x, float inMin, float inMax, float outMin, float outMax, Direction direction) {
   const float run = inMax - inMin;
   if (run == 0) {
     return -1;  // AVR returns -1, SAM returns 0
   }
   const float rise = outMax - outMin;
-  const float delta = x - inMin;
+  float delta = x - inMin;
+  if (direction == CCW) {
+    delta = (inMax - x) - inMin;
+  }
   return (delta * rise) / run + outMin;
 }
 
-float I0Servo::microSeconds2Angle(int x, float inMin, float inMax, float outMin, float outMax) {
+float I0Servo::microSeconds2Angle(int x, float inMin, float inMax, float outMin, float outMax, Direction direction) {
   const float run = inMax - inMin;
   if (run == 0) {
     return -1;  // AVR returns -1, SAM returns 0
   }
   const float rise = outMax - outMin;
-  const float delta = x - inMin;
+  float delta = x - inMin;
+  if (direction == CCW) {
+    delta = (inMax - x);
+  }
   return (delta * rise) / run + outMin;
 }
 
@@ -59,7 +66,7 @@ void I0Servo::setToMicroSeconds(int targetMicroseconds) {
 }
 
 void I0Servo::setToAngle(float angle, uint16_t servoSpeed) {
-  int targetMicroseconds = I0Servo::angle2MicroSeconds(angle, _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds);
+  int targetMicroseconds = I0Servo::angle2MicroSeconds(angle, _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds, _direction);
   setToMicroSeconds(targetMicroseconds);
 }
 
@@ -160,7 +167,7 @@ void I0Servo::write(int value) {
     else if (value > _maxAngle)
       value = _maxAngle;
 
-    value = angle2MicroSeconds(value, _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds);
+    value = angle2MicroSeconds(value, _minAngle, _maxAngle, _minMicroSeconds, _maxMicroSeconds, _direction);
   }
   this->writeMicroseconds(value);
 }
@@ -189,7 +196,7 @@ void I0Servo::release() {
 }
 
 float I0Servo::readAngle() {
-  return microSeconds2Angle(readMicroseconds(), _minMicroSeconds, _maxMicroSeconds, _minAngle, _maxAngle);
+  return microSeconds2Angle(readMicroseconds(), _minMicroSeconds, _maxMicroSeconds, _minAngle, _maxAngle, _direction);
 }
 
 int I0Servo::readMicroseconds() {
@@ -209,6 +216,10 @@ int I0Servo::readTicks() {
 
 bool I0Servo::attached() {
   return (pwm.attached());
+}
+
+void I0Servo::setDirection(Direction direction) {
+  _direction = direction;
 }
 
 void I0Servo::setTimerWidth(int value) {

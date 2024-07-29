@@ -25,6 +25,11 @@
 #define DEFAULT_SERVO_MIN_ANGLE 0
 #define DEFAULT_SERVO_MAX_ANGLE 270
 
+enum Direction {
+  CW,
+  CCW,
+};
+
 /*
  * This group/channel/timmer mapping is for information only;
  * the details are handled by lower-level code
@@ -53,11 +58,11 @@
 class I0Servo {
 public:
   I0Servo();
-  I0Servo(float minAngle, float maxAngle, float minMicroSeconds, float maxMicroSeconds);
+  I0Servo(float minAngle, float maxAngle, float minMicroSeconds, float maxMicroSeconds, Direction direction);
   int speed = 1;
   long angle2MicroSeconds(float x);
-  static long angle2MicroSeconds(float x, float inMin, float inMax, float outMin, float outMax);
-  static float microSeconds2Angle(int x, float inMin, float inMax, float outMin, float outMax);
+  static long angle2MicroSeconds(float x, float inMin, float inMax, float outMin, float outMax, Direction direction);
+  static float microSeconds2Angle(int x, float inMin, float inMax, float outMin, float outMax, Direction direction);
   String getStatus();
   void setToMicroSeconds(int targetMicroseconds);
   void setToAngle(float angle, uint16_t servoSpeed);
@@ -69,10 +74,11 @@ public:
   void writeMicroseconds(int value);  // Write pulse width in microseconds
   void writeTicks(int value);         // Write ticks, the smallest increment the servo can handle
   void release();
-  float readAngle();       // returns current pulse width as an angle between 0 and 180 degrees
-  int readMicroseconds();  // returns current pulse width in microseconds for this servo
-  int readTicks();         // returns current ticks, the smallest increment the servo can handle
-  bool attached();         // return true if this servo is attached, otherwise false
+  float readAngle();                       // returns current pulse width as an angle between 0 and 180 degrees
+  int readMicroseconds();                  // returns current pulse width in microseconds for this servo
+  int readTicks();                         // returns current ticks, the smallest increment the servo can handle
+  bool attached();                         // return true if this servo is attached, otherwise false
+  void setDirection(Direction direction);  // set servo rotation direction
 
   // ESP32 only functions
   void setTimerWidth(int value);  // set the PWM timer width (ESP32 ONLY)
@@ -88,6 +94,7 @@ private:
   float _maxAngle = (float)DEFAULT_SERVO_MAX_ANGLE;
   float _minMicroSeconds = (float)DEFAULT_SERVO_MIN_MICRO_SECONDS;
   float _maxMicroSeconds = (float)DEFAULT_SERVO_MAX_MICRO_SECONDS;
+  Direction _direction = CW;
   int _pinNumber = 0;                                  // GPIO pin assigned to this channel
   int _timer_width = DEFAULT_TIMER_WIDTH;              // ESP32 allows variable width PWM timers
   int _ticks = DEFAULT_PULSE_WIDTH_TICKS;              // current pulse width on this channel
